@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <button onclick="getAll()">Get all</button>
+    <button onclick="addData()">Add</button>
+    <br />Desc:<input id="desc" /> Price:<input id="price" />
+    <hr />
+    <div id="myDisplay"></div>
+    <script>
+
+      let res; // result array
+      const SERVER_URL= "http://127.0.0.1:8000/"
+      2022-07-05
+      //get all data
+      const getAll = async () => {
+        res = await fetch(SERVER_URL).then(
+          (response) => response.json()
+        );
+        buildDisplay();
+      };
+ 
+      //create a new row
+      const addData = async (id) => {
+        fetch(SERVER_URL, {
+          method: "POST",
+          body: JSON.stringify({
+            desc: desc.value,
+            price: price.value,
+          }),
+          headers: {
+            "Content-type": "application/json; charset=UTF-8",
+          },
+        })
+          .then((response) => response.json())
+          .then((json) => console.log(json));
+      };
+ 
+      //delete
+      const delProd = async (id) => {
+        fetch(`${SERVER_URL}/${id}`, {
+          method: "DELETE",
+        });
+      };
+      //build GUI
+      const buildDisplay = () => {
+        myDisplay.innerHTML = res
+          .map(
+            (prod) =>
+              `${prod.desc} <button onclick="delProd(${prod.id})">delete</button>`
+          )
+          .join("");
+      };
+    </script>
+  </body>
+</html>
